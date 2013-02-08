@@ -21,7 +21,8 @@
                                "~/Dropbox/Org/netip.org"
                                "~/Dropbox/Org/plataforma.org"
                                "~/Dropbox/Org/redmine.org"
-                               "~/Dropbox/Org/sports_emotions.org"
+                               "~/Dropbox/Org/sportsemotions-web.org"
+                               "~/Dropbox/Org/pluginitzacio.org"
                                "~/Dropbox/Org/xal-espaimercat.org")))
 
                                         ; Configure clockreport for agenda view
