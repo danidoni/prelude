@@ -1,2 +1,3 @@
 ;; Look and feel
-(set-default-font "Terminus-10")
+;; (setq default-frame-alist '((font . "Inconsolata-10")))
+(setq default-frame-alist '((font . "Anonymous Pro-10")))
