@@ -3,6 +3,8 @@
 
 (defun my-ruby-mode-hooks ()
   (linum-mode)
+  ;;  (load-file "~/.emacs.d/personal/ruby-mode-indent-fix.el")
+  (setq ruby-deep-indent-paren nil)
   (local-set-key (kbd "C-c C-c") 'comment-or-uncomment-region))
 
 (add-hook 'ruby-mode-hook
