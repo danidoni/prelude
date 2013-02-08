@@ -1,0 +1,4 @@
+# name: require debugger
+# key: reqdeb
+# --
+require 'ruby-debug'; debugger; 2+2
