@@ -3,138 +3,79 @@
 ;;; --------
 (require 'org)
 
-;; Prevents tasks from changing to DONE if any subtasks are still open
-(setq org-enforce-todo-dependencies t)
+(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 
-;; Org mode
-                                        ; Configure agenda files
-(setq org-directory "~/Dropbox/Org")
+(define-key mode-specific-map [?a] 'org-agenda)
 
-(defun agenda-files-in-org-directory ()
-  (file-expand-wildcards (concat org-directory "/*.org")))
+(eval-after-load "org-agenda"
+  '(progn
+     (define-prefix-command 'org-todo-state-map)
 
-(setq org-agenda-files (quote ("~/Dropbox/Org/casaasia.org"
-                               "~/Dropbox/Org/fcb.org"
-                               "~/Dropbox/Org/icv.org"
-                               "~/Dropbox/Org/manteniments.org"
-                               "~/Dropbox/Org/minoria.org"
-                               "~/Dropbox/Org/netip.org"
-                               "~/Dropbox/Org/plataforma.org"
-                               "~/Dropbox/Org/redmine.org"
-                               "~/Dropbox/Org/sportsemotions-web.org"
-                               "~/Dropbox/Org/pluginitzacio.org"
-                               "~/Dropbox/Org/xal-espaimercat.org")))
+     (define-key org-mode-map "\C-cx" 'org-todo-state-map)
 
-                                        ; Configure clockreport for agenda view
-(setq org-agenda-clockreport-parameter-plist '(:link t :maxlevel 4 :fileskip0 t))
-;(setq org-agenda-start-with-clockreport-mode t)
-(setq org-agenda-start-with-log-mode t)
-(setq org-deadline-warning-days 14)
-(setq org-agenda-show-all-dates t)
-(setq org-agenda-span 'day)
-(setq org-agenda-skip-deadline-if-done t)
-(setq org-agenda-skip-scheduled-if-done t)
-(setq org-todo-keywords
-      '((sequence "TODO" "SCHEDULED" "WAITING" "|" "DONE")))
-                                        ; Custom agenda view with agenda for current day, next todo items,
-                                        ; stuck projects and all other
-                                        ; todo items
-(setq org-todo-keyword-faces
-           '(("TODO" . (:foreground "orange" :weight bold))
-             ("DONE" . (:foreground "green" :weight bold))))
-(setq org-stuck-projects '("+LEVEL=1/-DONE" ("TODO" "WAITING" "NEXT") nil ""))
-(setq org-agenda-custom-commands
-      '(("A" "Gnuine tasks"
-         ((agenda "" ((org-agenda-ndays 1)))
-          (tags-todo "0inbox")
-          (tags-todo "6waiting")
-          (tags-todo "1now")
-          (tags-todo "2next")
-          (tags-todo "3soon")
-          (tags-todo "4later")
-          (tags-todo "5someday")
-          (todo "TODO")))
-        ("a" "Gnuine tasks"
-         ((agenda "" ((org-agenda-ndays 1)))
-          (tags-todo "+PRIORITY=\"A\"")
-          (tags-todo "+PRIORITY=\"B\"")
-          (tags-todo "+PRIORITY=\"C\"")
-          (tags-todo "+PRIORITY=\"\"")))
-        ("d" "All done tasks"
-         ((todo "DONE")))
-        ("P" "Planner"
-         ((agenda ""  ((org-agenda-ndays 1)))
-          (tags-todo "dilluns")
-          (tags-todo "dimarts")
-          (tags-todo "dimecres")
-          (tags-todo "dijous")
-          (tags-todo "divendres")
-          (tags-todo "setmana1")
-          (tags-todo "setmana2")
-          (tags-todo "setmana3")
-          (tags-todo "setmana4")
-          (tags-todo "setmana5")
-          (tags-todo "novembre")
-          (tags-todo "desembre")
-          (todo "TODO")))
-        ("T" "Timeline"
-         ((agenda "" ((org-agenda-ndays 14)))
-          (todo "TODO")))))
+     (define-key org-todo-state-map "x"
+       #'(lambda nil (interactive) (org-todo "CANCELLED")))
+     (define-key org-todo-state-map "d"
+       #'(lambda nil (interactive) (org-todo "DONE")))
+     (define-key org-todo-state-map "f"
+       #'(lambda nil (interactive) (org-todo "DEFERRED")))
+     (define-key org-todo-state-map "l"
+       #'(lambda nil (interactive) (org-todo "DELEGATED")))
+     (define-key org-todo-state-map "s"
+       #'(lambda nil (interactive) (org-todo "STARTED")))
+     (define-key org-todo-state-map "w"
+       #'(lambda nil (interactive) (org-todo "WAITING")))
 
-(setq org-refile-targets `((org-agenda-files . (:level . 1))))
-(setq org-default-notes-file "~/Dropbox/Org/inbox.org")
+     (define-key org-agenda-mode-map "\C-n" 'next-line)
+     (define-key org-agenda-keymap "\C-n" 'next-line)
+     (define-key org-agenda-mode-map "\C-p" 'previous-line)
+     (define-key org-agenda-keymap "\C-p" 'previous-line)))
 
+(require 'remember)
 
-; Set default column view headings: Task Effort Clock_Summary
-(setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
-; global Effort estimate values
-; global STYLE property values for completion
-(setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00"))))
-                                        ; Start indented
-(setq org-startup-indented t)
+(add-hook 'remember-mode-hook 'org-remember-apply-template)
 
-                                        ; Set up for mobile org
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
-(setq org-mobile-inbox-for-pull "~/Dropbox/MobileOrg/inbox.org")
+(define-key global-map [(control meta ?r)] 'remember)
 
-(define-key global-map "\C-cc" 'org-capture)
-;; Capture templates for: TODO tasks, Notes, appointments, phone calls, and org-protocol
-(setq org-capture-templates
-      (quote (("c" "Todo" entry (file+headline "~/Dropbox/Org/inbox.org" "Tasks")
-               "* TODO %^{Action oriented description} %?\n:%U\n"))))
-(define-key global-map "\C-cc"
-  (lambda () (interactive) (org-capture nil "c")))
-
-(setq org-deadline-warning-days 14)
-(setq org-agenda-show-all-dates t)
-
-(defun org-column-view-uses-fixed-width-face ()
-  ;; copy from org-faces.el
-  (when (fboundp 'set-face-attribute)
-    ;; Make sure that a fixed-width face is used when we have a column
-    ;; table.
-    (set-face-attribute 'org-column nil
-                        :height (face-attribute 'default :height)
-                        :family (face-attribute 'default :family))))
-
-(when (and (fboundp 'daemonp) (daemonp))
-  (add-hook 'org-mode-hook 'org-column-view-uses-fixed-width-face))
-
-;; Org mode notifications
-;; the appointment notification facility
-(setq
-  appt-message-warning-time 15 ;; warn 15 min in advance
-
-  appt-display-mode-line t     ;; show in the modeline
-  appt-display-format 'window) ;; use our func
-(appt-activate 1)              ;; active appt (appointment notification)
-(display-time)                 ;; time display is required for this...
-
- ;; update appt each time agenda opened
-
-(add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-
-;; our little façade-function for djcb-popup
-(defun djcb-appt-display (min-to-app new-time msg)
-  (djcb-popup (format "Appointment in %s minute(s)" min-to-app) msg))
-(setq appt-disp-window-function (function djcb-appt-display))
+(custom-set-variables
+ '(org-agenda-files (quote ("~/Dropbox/Org/todo.org")))
+ '(org-default-notes-file "~/Dropbox/Org/notes.org")
+ '(org-agenda-ndays 7)
+ '(org-deadline-warning-days 14)
+ '(org-agenda-show-all-dates t)
+ '(org-agenda-skip-deadline-if-done t)
+ '(org-agenda-skip-scheduled-if-done t)
+ '(org-agenda-start-on-weekday nil)
+ '(org-reverse-note-order t)
+ '(org-fast-tag-selection-single-key (quote expert))
+ ;; Prevents tasks from changing to DONE if any subtasks are still open
+ '(org-enforce-todo-dependencies t)
+ '(org-agenda-custom-commands
+   (quote (("d" todo "DELEGATED" nil)
+       ("c" todo "DONE|DEFERRED|CANCELLED" nil)
+       ("w" todo "WAITING" nil)
+       ("W" agenda "" ((org-agenda-ndays 21)))
+       ("A" agenda ""
+        ((org-agenda-skip-function
+          (lambda nil
+        (org-agenda-skip-entry-if (quote notregexp) "\\=.*\\[#A\\]")))
+         (org-agenda-ndays 1)
+         (org-agenda-overriding-header "Today's Priority #A tasks: ")))
+       ("u" alltodo ""
+        ((org-agenda-skip-function
+          (lambda nil
+        (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
+                      (quote regexp) "\n]+>")))
+         (org-agenda-overriding-header "Unscheduled TODO entries: ")))
+       ("s" agenda ""
+        ((org-agenda-ndays 1)
+         (tags-todo "+PRIORITY=\"\"")
+         (tags-todo "+PRIORITY=\"A\"")
+         (tags-todo "+PRIORITY=\"B\"")
+         (tags-todo "+PRIORITY=\"C\""))))))
+ '(org-remember-store-without-prompt t)
+ '(org-remember-templates
+   (quote ((116 "* TODO %?\n  %u" "~/todo.org" "Tasks")
+       (110 "* %u %?" "~/notes.org" "Notes"))))
+ '(remember-annotation-functions (quote (org-remember-annotation)))
+ '(remember-handler-functions (quote (org-remember-handler))))
