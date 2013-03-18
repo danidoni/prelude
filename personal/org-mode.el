@@ -67,15 +67,15 @@
         (org-agenda-skip-entry-if (quote scheduled) (quote deadline)
                       (quote regexp) "\n]+>")))
          (org-agenda-overriding-header "Unscheduled TODO entries: ")))
-       ("s" agenda ""
-        ((org-agenda-ndays 1)
+       ("s" "By priority"
+        ((agenda "" ((org-agenda-ndays 1)))
          (tags-todo "+PRIORITY=\"\"")
          (tags-todo "+PRIORITY=\"A\"")
          (tags-todo "+PRIORITY=\"B\"")
          (tags-todo "+PRIORITY=\"C\""))))))
  '(org-remember-store-without-prompt t)
  '(org-remember-templates
-   (quote ((116 "* TODO %?\n  %u" "~/todo.org" "Tasks")
+   (quote ((116 "* TODO [#A] %?\n  %u" "~/Dropbox/Org/todo.org" "Tasks")
        (110 "* %u %?" "~/notes.org" "Notes"))))
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(remember-handler-functions (quote (org-remember-handler))))
