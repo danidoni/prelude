@@ -13,3 +13,7 @@
                               ;("git" ".git" "cd %d && git --no-pager ls-files --full-name")
                               ("" "" helm-cmd-t-get-find)))
 (global-set-key (kbd "C-c C-o") 'helm-cmd-t)
+
+;; Selection face customization
+(custom-set-faces
+ '(helm-selection ((t (:background "gold" :underline nil :foreground "black")))))
