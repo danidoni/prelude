@@ -2,3 +2,4 @@
 (setq deft-directory "~/Dropbox/Notes/")
 (setq deft-text-mode 'markdown-mode)
 (global-set-key (kbd "<f9>") 'deft)
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
