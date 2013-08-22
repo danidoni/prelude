@@ -96,20 +96,4 @@
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(remember-handler-functions (quote (org-remember-handler))))
 
-; Implement pomodoro technique time chunks when clocking in
-(require 'org-timer)
-(setq org-timer-default-timer 25)
-
-; Display timer in both modeline and frame title
-(setq org-timer-display 'both)
-
-(defun set-timer-if-none-active ()
-  (interactive)
-  (if (not org-timer-current-timer)
-      (org-timer-set-timer '(1))))
-
-(add-hook 'org-clock-in-hook 'set-timer-if-none-active 'append)
-(add-hook 'org-clock-out-hook (lambda ()
-                                (setq org-mode-line-string nil)))
-
 (global-set-key (kbd "C-M-r") 'org-remember)
